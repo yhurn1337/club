@@ -20,7 +20,7 @@
                 {fullName}
             </p>
             <p class="user-short__email">
-                1loso@mail.ru
+                {data?.user?.email ? data?.user?.email : 'Email'}
             </p>
         </div>
     </div>
