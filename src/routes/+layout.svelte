@@ -4,7 +4,7 @@
 
 <svelte:head>
 	<link href="/styles/normalize.css" rel="stylesheet" />
-	<link href="/styles/global.scss" rel="stylesheet" />
+	<link href="/styles/global.css" rel="stylesheet" />
 </svelte:head>
 	
 		
