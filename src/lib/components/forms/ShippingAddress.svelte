@@ -1,0 +1,87 @@
+<script>
+    import Input from "$lib/components/Input.svelte";
+    import { fade } from "svelte/transition";
+    import { formCount } from '$lib/stores';
+    import { enhance } from '$app/forms';
+    import { onMount } from "svelte";
+  import toast from "svelte-french-toast";
+
+
+    export let data;
+    export let form
+
+    onMount(() => {
+        if(data?.user?.city){
+            $formCount++
+        }
+    });
+
+    const handleEnhance = () => {
+        console.log(form)
+        return async ({ result, update }) =>{
+            switch (result.type) {
+                case 'success':
+                    $formCount++
+                    break;
+                case 'fail':
+                    toast.error('Проверьте вводы на ошибки')
+                    break;
+                default:
+                    break;
+            }
+            await update()
+        }
+    }
+
+</script>
+
+<div class="data" in:fade={{ duration: 300 }} >
+    <h2>Адрес доставки</h2>
+    <form action="?/shippingAddress" method="POST" use:enhance={handleEnhance}>
+        <div class="grid">
+            <Input name="country" value={data?.user?.country} placeholder="Страна" label="Страна" required="true" errors={form?.errors?.country} disabled={data?.user?.formfilled ? true : false} />
+            <Input name="state" value={data?.user?.state} placeholder="Область/Край" label="Область/Край" required="true" errors={form?.errors?.state} disabled={data?.user?.formfilled ? true : false} />
+            <Input name="city" value={data?.user?.city} placeholder="Населенный пункт" label="Населенный пункт" required="true" errors={form?.errors?.city} disabled={data?.user?.formfilled ? true : false} />
+            <Input name="address" value={data?.user?.address} type="text" placeholder="Улица, дом, квартира" label="Улица, дом, квартира" errors={form?.errors?.address} disabled={data?.user?.formfilled ? true : false} />
+        </div>
+        {#if !data?.user?.formfilled}
+        <button type="submit" class="btn-primary">Далее</button>
+        {/if}
+    </form>
+</div>
+
+<style lang="scss">
+    .data{
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        form{
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            .grid{
+                grid-column: 1/4;
+            }
+            button{
+                margin-top: 20px;
+                grid-column: 3/4;
+            }
+        }
+        h2{
+            font-size: 25px;
+        }
+    }
+    .grid{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 20px;
+        row-gap: 25px;
+
+        @media (max-width: 1024px) {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+</style>
+
